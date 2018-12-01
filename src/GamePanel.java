@@ -10,7 +10,7 @@ import java.util.Random;
 public class GamePanel extends JPanel implements KeyListener, Runnable {
 
     private ArrayList<Rectangle2D> rectList;
-    private int snakeSize = 5, x = 0, y = 0, squareSize = 20, mapWidth, mapHeight, foodX, foodY, gameSpeed = 10;
+    private int snakeSize = 5, x = 0, y = 0, squareSize = 20, mapWidth, mapHeight, foodX, foodY, gameSpeed;
     private boolean running = false;
     private Thread thread;
     private String lastMove = "right";
@@ -33,6 +33,7 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
         dim.height = 600;
         mapHeight = dim.height/squareSize;
         mapWidth = dim.width/squareSize;
+        y = mapHeight/2;
 
         setPreferredSize(dim);
         setBackground(Color.BLACK);
@@ -98,6 +99,7 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
 
     @Override
     public void run() {
+        setFocusable(true);
         while(running) {
 
             if(x == foodX && foodY == y) {
@@ -142,6 +144,12 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
                     }
                     break;
             }
+            for(Rectangle2D rect:rectList) {
+                if(rect.getX() == x*squareSize && rect.getY() == y*squareSize){
+                    stop();
+                    System.out.println("OOPS");
+                }
+            }
         }
     }
     public void start() {
@@ -168,5 +176,9 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
                 System.out.println("OOPS");
             }
         }
+    }
+
+    public void setGameSpeed(int gameSpeed) {
+        this.gameSpeed = gameSpeed;
     }
 }

@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Random;
@@ -42,18 +43,23 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        g2.setPaint(Color.YELLOW);
 
-        Rectangle2D foodRect = new Rectangle2D.Double(foodX*squareSize, foodY*squareSize, squareSize, squareSize);
+        g2.setPaint(Color.RED);
+        Ellipse2D foodRect = new Ellipse2D.Double(foodX*squareSize, foodY*squareSize, squareSize, squareSize);
         g2.fill(foodRect);
         g2.draw(foodRect);
 
         g2.setPaint(Color.GREEN);
-
         for(int i = 0; i < rectList.size(); i++) {
             g2.fill(rectList.get(i));
             g2.draw(rectList.get(i));
         }
+
+        g2.setPaint(Color.WHITE);
+        Font font = new Font("Arial", Font.PLAIN, 22);
+        setFont(font);
+        g2.drawString("Score: " + (snakeSize-5)*gameSpeed,(mapWidth-3)*squareSize*3/4,40);
+        g2.drawString("Level: " + gameSpeed, (mapWidth-9)*squareSize/4, 40);
     }
 
     @Override
@@ -96,7 +102,6 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
 
             if(x == foodX && foodY == y) {
                 snakeSize++;
-                System.out.println(snakeSize);
                 newFood();
             }
 
@@ -158,8 +163,9 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
         foodY = random.nextInt(mapHeight);
 
         for(Rectangle2D rect:rectList) {
-            if(rect.getX() == foodX && rect.getY() == foodY){
+            if(rect.getX() == foodX*squareSize && rect.getY() == foodY*squareSize){
                 newFood();
+                System.out.println("OOPS");
             }
         }
     }

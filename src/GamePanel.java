@@ -11,7 +11,7 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
 
     private ArrayList<Rectangle2D> rectList;
     private int snakeSize = 5, x = 0, y = 0, squareSize = 20, mapWidth, mapHeight, foodX, foodY, gameSpeed;
-    private boolean running = false;
+    private boolean running = false, gameOver = false;
     private Thread thread;
     private String lastMove = "right";
 
@@ -56,11 +56,21 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
             g2.draw(rectList.get(i));
         }
 
-        g2.setPaint(Color.WHITE);
+        g2.setPaint(Color.LIGHT_GRAY);
         Font font = new Font("Arial", Font.PLAIN, 22);
         setFont(font);
-        g2.drawString("Score: " + (snakeSize-5)*gameSpeed,(mapWidth-3)*squareSize*3/4,40);
-        g2.drawString("Level: " + gameSpeed, (mapWidth-9)*squareSize/4, 40);
+        if(!gameOver) {
+            g2.drawString("Score: " + (snakeSize - 5) * gameSpeed, (mapWidth - 3) * squareSize * 3 / 4, 40);
+            g2.drawString("Level: " + gameSpeed, (mapWidth - 9) * squareSize / 4, 40);
+        }
+
+        if(gameOver) {
+            g2.setPaint(Color.LIGHT_GRAY);
+            setFont(new Font("Arial", Font.PLAIN, 30));
+            g2.drawString("GAME OVER", 310,200);
+            g2.drawString("Your score: " + (snakeSize - 5) * gameSpeed, 300,300);
+            g2.drawString("Click ENTER to reset", 250,400);
+        }
     }
 
     @Override
@@ -99,7 +109,6 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
 
     @Override
     public void run() {
-        setFocusable(true);
         while(running) {
 
             if(x == foodX && foodY == y) {
@@ -114,7 +123,7 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
             repaint();
 
             try {
-                Thread.sleep(500/gameSpeed);
+                Thread.sleep(250/gameSpeed);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -158,11 +167,13 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
     }
     public void stop() {
         running = false;
+        gameOver = true;
         try {
             thread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        repaint();
     }
 
     public void newFood() {
@@ -173,12 +184,14 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
         for(Rectangle2D rect:rectList) {
             if(rect.getX() == foodX*squareSize && rect.getY() == foodY*squareSize){
                 newFood();
-                System.out.println("OOPS");
             }
         }
     }
 
     public void setGameSpeed(int gameSpeed) {
         this.gameSpeed = gameSpeed;
+    }
+    public boolean getGameOver() {
+        return gameOver;
     }
 }

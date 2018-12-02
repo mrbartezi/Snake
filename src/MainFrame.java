@@ -7,7 +7,7 @@ public class MainFrame extends JFrame implements KeyListener {
 
     private GamePanel gamePanel;
     private Menu menu;
-    private boolean menuOn = true;
+    private boolean menuOn = true, newMenu = false;
 
     public MainFrame() {
         setLocation(560,240);
@@ -25,6 +25,15 @@ public class MainFrame extends JFrame implements KeyListener {
         pack();
 
     }
+    public void newG() {
+        remove(gamePanel);
+        menuOn = true;
+
+        menu = new Menu();
+        add(menu, BorderLayout.CENTER);
+        pack();
+        newMenu = false;
+    }
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -35,6 +44,13 @@ public class MainFrame extends JFrame implements KeyListener {
     public void keyPressed(KeyEvent e) {
         if(!menuOn) {
             gamePanel.keyPressed(e);
+            if(gamePanel.getGameOver()) {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    newG();
+                    newMenu = true;
+                    e.setKeyCode(0);
+                }
+            }
         }
         if(menuOn) {
             if(e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -42,7 +58,6 @@ public class MainFrame extends JFrame implements KeyListener {
                 menuOn = false;
                 gamePanel = new GamePanel();
                 gamePanel.setGameSpeed(menu.getGameSpeed());
-                gamePanel.setFocusable(true);
                 add(gamePanel, BorderLayout.CENTER);
                 pack();
             }

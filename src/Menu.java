@@ -19,15 +19,12 @@ public class Menu extends JPanel{
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        g2.setPaint(Color.WHITE);
+        g2.setPaint(Color.LIGHT_GRAY);
 
         setFont(new Font("Arial", Font.PLAIN, 40));
         g2.drawString("< Gamespeed: " + gameSpeed +" >",240,300);
 
         g2.drawString("Click ENTER to continue",180,450);
-
-        g2.setPaint(Color.CYAN);
-        //g2.drawLine(400,0,400,600);
     }
 
     public void gameSpeedChange(boolean change) {

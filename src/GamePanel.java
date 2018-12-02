@@ -10,7 +10,7 @@ import java.util.Random;
 public class GamePanel extends JPanel implements KeyListener, Runnable {
 
     private ArrayList<Rectangle2D> rectList;
-    private int snakeSize = 20, x = 0, y = 0, squareSize = 20, mapWidth, mapHeight, foodX, foodY, gameSpeed,
+    private int snakeSize = 5, x = 0, y = 0, squareSize = 20, mapWidth, mapHeight, foodX, foodY, gameSpeed,
             score = 0, bestScore;
     private boolean running = false, gameOver = false;
     private Thread thread;

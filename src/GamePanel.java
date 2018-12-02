@@ -15,6 +15,7 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
     private boolean running = false, gameOver = false;
     private Thread thread;
     private String lastMove = "right";
+    private KeyEvent event;
 
     public GamePanel() {
         rectList = new ArrayList<>();
@@ -83,15 +84,16 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
             setFont(new Font("Arial", Font.PLAIN, 30));
 
             g2.setPaint(Color.BLACK);
-            g2.drawString("GAME OVER", 309,199);
-            g2.drawString("Your score: " + score, 299,299);
-            g2.drawString("Click ENTER to reset", 249,399);
-
+            g2.drawString("GAME OVER", 309,149);
+            g2.drawString("Best score: " + bestScore, 299,299);
+            g2.drawString("Your score: " + score, 299,349);
+            g2.drawString("Click ENTER to reset", 259,499);
 
             g2.setPaint(Color.LIGHT_GRAY);
-            g2.drawString("GAME OVER", 310,200);
-            g2.drawString("Your score: " + score, 300,300);
-            g2.drawString("Click ENTER to reset", 250,400);
+            g2.drawString("GAME OVER", 310,150);
+            g2.drawString("Best score: " + bestScore, 300,300);
+            g2.drawString("Your score: " + score, 300,350);
+            g2.drawString("Click ENTER to reset", 260,500);
         }
     }
 
@@ -101,6 +103,7 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        this.event = e;
         if(e.getKeyCode() == KeyEvent.VK_UP) {
             if(!lastMove.equals("down")) {
                 if(!(rectList.get(rectList.size()-2).getX() == x*squareSize && rectList.get(rectList.size()-2).getY() == (y-1)*squareSize)) {
@@ -142,7 +145,6 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
     @Override
     public void run() {
         while(running) {
-
             if(x == foodX && foodY == y) {
                 snakeSize++;
                 newFood();

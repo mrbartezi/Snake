@@ -4,7 +4,7 @@ import java.awt.*;
 
 public class Menu extends JPanel{
 
-    private int gameSpeed = 5;
+    private int gameSpeed;
 
     public Menu() {
         Dimension dim = getPreferredSize();
@@ -44,5 +44,8 @@ public class Menu extends JPanel{
 
     public int getGameSpeed() {
         return gameSpeed;
+    }
+    public void setGameSpeed(int gameSpeed) {
+        this.gameSpeed = gameSpeed;
     }
 }

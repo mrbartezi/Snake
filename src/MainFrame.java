@@ -8,7 +8,7 @@ public class MainFrame extends JFrame implements KeyListener {
     private GamePanel gamePanel;
     private Menu menu;
     private boolean menuOn = true, newMenu = false;
-    private int bestScore = 0;
+    private int bestScore = 0, gameSpeed = 5;
 
     public MainFrame() {
         setLocation(560,240);
@@ -22,6 +22,7 @@ public class MainFrame extends JFrame implements KeyListener {
         setFocusable(true);
 
         menu = new Menu();
+        menu.setGameSpeed(gameSpeed);
         add(menu, BorderLayout.CENTER);
         pack();
 
@@ -31,6 +32,7 @@ public class MainFrame extends JFrame implements KeyListener {
         menuOn = true;
 
         menu = new Menu();
+        menu.setGameSpeed(gameSpeed);
         add(menu, BorderLayout.CENTER);
         pack();
         newMenu = false;
@@ -61,11 +63,12 @@ public class MainFrame extends JFrame implements KeyListener {
         }
         if(menuOn) {
             if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+                gameSpeed = menu.getGameSpeed();
                 remove(menu);
                 menuOn = false;
                 gamePanel = new GamePanel();
                 gamePanel.setBestScore(bestScore);
-                gamePanel.setGameSpeed(menu.getGameSpeed());
+                gamePanel.setGameSpeed(gameSpeed);
                 add(gamePanel, BorderLayout.CENTER);
                 pack();
             }

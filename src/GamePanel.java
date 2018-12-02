@@ -10,7 +10,8 @@ import java.util.Random;
 public class GamePanel extends JPanel implements KeyListener, Runnable {
 
     private ArrayList<Rectangle2D> rectList;
-    private int snakeSize = 5, x = 0, y = 0, squareSize = 20, mapWidth, mapHeight, foodX, foodY, gameSpeed;
+    private int snakeSize = 20, x = 0, y = 0, squareSize = 20, mapWidth, mapHeight, foodX, foodY, gameSpeed,
+            score = 0, bestScore;
     private boolean running = false, gameOver = false;
     private Thread thread;
     private String lastMove = "right";
@@ -59,46 +60,77 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
         g2.setPaint(Color.LIGHT_GRAY);
         Font font = new Font("Arial", Font.PLAIN, 22);
         setFont(font);
+        score = (snakeSize - 5) * gameSpeed;
+        if(score > bestScore) {
+            bestScore = score;
+        }
         if(!gameOver) {
-            g2.drawString("Score: " + (snakeSize - 5) * gameSpeed, (mapWidth - 3) * squareSize * 3 / 4, 40);
+            g2.setPaint(Color.BLACK);
+
+            g2.drawString("Score: " + score, (mapWidth - 3) * squareSize * 3 / 4 - 1,39);
+            g2.drawString("Best Score: " + bestScore, (mapWidth - 7) * squareSize / 2 - 1, 39);
+            g2.drawString("Level: " + gameSpeed, (mapWidth - 9) * squareSize / 4 - 1, 39);
+
+            g2.setPaint(Color.LIGHT_GRAY);
+            g2.drawString("Score: " + score, (mapWidth - 3) * squareSize * 3 / 4, 40);
+            g2.drawString("Best Score: " + bestScore, (mapWidth - 7) * squareSize / 2, 40);
             g2.drawString("Level: " + gameSpeed, (mapWidth - 9) * squareSize / 4, 40);
+
+
         }
 
         if(gameOver) {
-            g2.setPaint(Color.LIGHT_GRAY);
             setFont(new Font("Arial", Font.PLAIN, 30));
+
+            g2.setPaint(Color.BLACK);
+            g2.drawString("GAME OVER", 309,199);
+            g2.drawString("Your score: " + score, 299,299);
+            g2.drawString("Click ENTER to reset", 249,399);
+
+
+            g2.setPaint(Color.LIGHT_GRAY);
             g2.drawString("GAME OVER", 310,200);
-            g2.drawString("Your score: " + (snakeSize - 5) * gameSpeed, 300,300);
+            g2.drawString("Your score: " + score, 300,300);
             g2.drawString("Click ENTER to reset", 250,400);
         }
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
-
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
         if(e.getKeyCode() == KeyEvent.VK_UP) {
             if(!lastMove.equals("down")) {
-                lastMove = "up";
+                if(!(rectList.get(rectList.size()-2).getX() == x*squareSize && rectList.get(rectList.size()-2).getY() == (y-1)*squareSize)) {
+                    lastMove = "up";
+                }
             }
         }
         if(e.getKeyCode() == KeyEvent.VK_DOWN) {
             if(!lastMove.equals("up")) {
-                lastMove = "down";
+                if(!(rectList.get(rectList.size()-2).getX() == x*squareSize && rectList.get(rectList.size()-2).getY() == (y+1)*squareSize)) {
+                    lastMove = "down";
+                }
             }
         }
         if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
             if(!lastMove.equals("left")) {
-                lastMove = "right";
+                if(!(rectList.get(rectList.size()-2).getX() == (x+1)*squareSize && rectList.get(rectList.size()-2).getY() == y*squareSize)) {
+                    lastMove = "right";
+                }
             }
         }
         if(e.getKeyCode() == KeyEvent.VK_LEFT) {
             if(!lastMove.equals("right")) {
-                lastMove = "left";
+                if(!(rectList.get(rectList.size()-2).getX() == (x-1)*squareSize && rectList.get(rectList.size()-2).getY() == y*squareSize)) {
+                    lastMove = "left";
+                }
             }
+        }
+        if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+            stop();
         }
     }
 
@@ -156,7 +188,6 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
             for(Rectangle2D rect:rectList) {
                 if(rect.getX() == x*squareSize && rect.getY() == y*squareSize){
                     stop();
-                    System.out.println("OOPS");
                 }
             }
         }
@@ -193,5 +224,12 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
     }
     public boolean getGameOver() {
         return gameOver;
+    }
+
+    public void setBestScore(int bestScore) {
+        this.bestScore = bestScore;
+    }
+    public int getBestScore() {
+        return bestScore;
     }
 }

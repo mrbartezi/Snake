@@ -8,6 +8,7 @@ public class MainFrame extends JFrame implements KeyListener {
     private GamePanel gamePanel;
     private Menu menu;
     private boolean menuOn = true, newMenu = false;
+    private int bestScore = 0;
 
     public MainFrame() {
         setLocation(560,240);
@@ -43,13 +44,19 @@ public class MainFrame extends JFrame implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         if(!menuOn) {
-            gamePanel.keyPressed(e);
             if(gamePanel.getGameOver()) {
+                if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    System.exit(0);
+                }
                 if(e.getKeyCode() == KeyEvent.VK_ENTER) {
                     newG();
                     newMenu = true;
                     e.setKeyCode(0);
                 }
+            }
+            gamePanel.keyPressed(e);
+            if(gamePanel.getBestScore() > bestScore) {
+                this.bestScore = gamePanel.getBestScore();
             }
         }
         if(menuOn) {
@@ -57,6 +64,7 @@ public class MainFrame extends JFrame implements KeyListener {
                 remove(menu);
                 menuOn = false;
                 gamePanel = new GamePanel();
+                gamePanel.setBestScore(bestScore);
                 gamePanel.setGameSpeed(menu.getGameSpeed());
                 add(gamePanel, BorderLayout.CENTER);
                 pack();
@@ -67,11 +75,21 @@ public class MainFrame extends JFrame implements KeyListener {
             else if(e.getKeyCode() == KeyEvent.VK_LEFT) {
                 menu.gameSpeedChange(false);
             }
+            else if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                System.exit(0);
+            }
         }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
 
+    }
+
+    public void setBestScore(int score) {
+        this.bestScore = score;
+    }
+    public int getBestScore() {
+        return bestScore;
     }
 }
